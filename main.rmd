@@ -1,0 +1,160 @@
+---
+title: "Primera Prueba"
+subtitle: "Geoestadística - CITI 166"
+date: "Mayo 2021"
+output: 
+  rmarkdown::html_document:
+    theme: "lumen"
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(include = FALSE)
+source('tools.r')
+```
+Para comenzar la prueba, abra una sesion de `R` y tome nota del directorio de
+trabajo. Esto será importante al momento de enviar sus respuestas. Asegúrese de
+que el archivo `prueba1` se encuentra en su directorio de trabajo y cargue
+el contenido complementario para la prueba corriendo el siguiente comando:
+
+```r
+load('prueba1')
+```
+
+Comienze la prueba corriendo la función `inicia()` y respondiéndole lo que le
+pide:
+
+```r
+inicia()
+```
+
+```{r vartype}
+make_question(
+  type = 'spl',
+  key = 'vartype',
+  content = list(
+    c('Número de desperfectos en el capó de un vehículo saliendo de la fábrica', 'dis'),
+    c('La nota obtenida en la prueba de estadística, en escala de 1 a 7',
+      'con'),
+    c('La nota obtenida en la prueba de estadística, en escala de 0 a 100',
+      'con'),
+    c('La temperatura ambiental en grados Celsius', 'con'),
+    c('La temperatura ambiental en grados Kelvin', 'con'),
+    c('Número de trazas de fisión en un cristal de apatita', 'dis'),
+    c('Número de erupciones volcánicas en el último año', 'dis'),
+    c('La intensidad sísmica', 'ord'),
+    c('La magnitud de un sismo', 'con'),
+    c('La profundidad de un foco sísmico expresada como uno de tres valores: "somera", "media", "profunda"', 'ord'),
+    c('La cantidad de fósiles de determinada especie en una muestra de sedimento', 'dis'),
+    c('La proporción de isótopos estables de oxígeno en la testa de foraminíferos', 'con'),
+    c('El nombre de un centro eruptivo', 'nom'),
+    c('El nombre del mineral constituyente de una muestra de roca', 'nom'),
+    c('La dureza de un mineral en la escala de Mohs', 'ord'),
+    c('La proporción de Fe en un meteorito', 'con'),
+    c('El diámetro de un clasto en milímetros', 'con'),
+    c('La tasa de sedimentación en un delta', 'con'),
+    c('El tipo de falla', 'nom'),
+    c('El tiempo transcurrido en responder esta pregunta', 'con'),
+    c('Cantidad de geólogos titulados en el último año', 'dis'),
+    c('El índice de explosividad volcánica', 'ord'),
+    c('El orden de un canal dentro de una red hídrica', 'ord'),
+    c('La máxima altura de la columna piroclástica durante una erupción',
+      'con')
+  ),
+  resp_set = c('nom', 'ord', 'dis', 'con'),
+  n = 5
+)
+
+```
+
+### vartype 
+
+Para responder esta pregunta es necesario invocar la función `run_question()`:
+
+```r
+run_question('vartype')
+```
+La consola imprimirá una serie de descripciones de variables, una a la vez, y
+esperará una respuesta de su parte. Clasifique las variables según su **tipo**
+siguiendo el siguiente esquema, respondiendo únicamente con la clave entre `[]`
+(e.g. **nom** si considera que la variable descrita es de tipo
+*categórica-nominal*):
+
+-  [**nom**] categórica-nominal
+-  [**ord**] categórica-ordinal
+-  [**dis**] numérica-discreta
+-  [**con**] numérica-continua
+
+```{r mscale}
+make_question(
+  type = 'spl',
+  key = 'mscale',
+  content = list(
+    c('Número de desperfectos en el capó de un vehículo saliendo de la fábrica', 'rat'),
+    c('La nota obtenida en la prueba de estadística, en escala de 1 a 7',
+      'int'),
+    c('La nota obtenida en la prueba de estadística, en escala de 0 a 100',
+      'rat'),
+    c('La temperatura ambiental en grados Celsius', 'int'),
+    c('La temperatura ambiental en grados Kelvin', 'rat'),
+    c('Número de trazas de fisión en un cristal de apatita', 'rat'),
+    c('Número de erupciones volcánicas en el último año', 'rat'),
+    c('La intensidad sísmica', 'int'),
+    c('La magnitud de un sismo', 'rat'),
+    c('La profundidad de un foco sísmico expresada como uno de tres valores: "somera", "media", "profunda"', 'ord'),
+    c('La cantidad de fósiles de determinada especie en una muestra de sedimento', 'rat'),
+    c('La concentración de un isótopo estable de oxígeno en la testa de foraminíferos', 'rat'),
+    c('El nombre de un centro eruptivo', 'nom'),
+    c('El nombre del mineral constituyente de una muestra de roca', 'nom'),
+    c('La dureza de un mineral en la escala de Mohs', 'ord'),
+    c('La concentración de Fe en un meteorito', 'rat'),
+    c('El diámetro de un clasto en milímetros', 'rat'),
+    c('La tasa de sedimentación en un delta', 'rat'),
+    c('El tipo de falla', 'nom'),
+    c('El tiempo transcurrido en responder esta pregunta', 'rat'),
+    c('Cantidad de geólogos titulados en el último año', 'rat'),
+    c('El índice de explosividad volcánica', 'ord'),
+    c('El orden de un canal dentro de una red hídrica', 'ord'),
+    c('La máxima altura de la columna piroclástica durante una erupción',
+      'rat')
+  ),
+  resp_set = c('nom', 'ord', 'int', 'rat'),
+  n = 5
+)
+
+```
+### mscale
+
+Esta pregunta funciona del mismo modo que la anterior, para comenzar es
+necesario invocar la función `run_question()`:
+
+```r
+run_question('mscale')
+```
+
+La consola imprimirá una serie de descripciones de variables, una a la vez, y
+esperará una respuesta de su parte. Clasifique las variables según **la escala
+de medición a la que pertenece** siguiendo el siguiente esquema:
+
+-  [**nom**] escala nominal
+-  [**ord**] escala ordinal
+-  [**int**] escala de intervalo
+-  [**rat**] escala de razón ('ratio')
+
+
+
+## Finalización
+
+Para terminar su prueba, invoque la función `submit()`:
+
+```r
+submit()
+```
+
+mande la custión...
+
+# FIN
+
+```{r endgame}
+# Generate the serialized object to be loaded by every student
+save.image(file = 'prueba1')
+```
