@@ -28,7 +28,7 @@ inicia()
 ```
 
 ```{r vartype}
-make_question(
+.make_question(
   type = 'spl',
   key = 'vartype',
   content = list(
@@ -85,7 +85,7 @@ siguiendo el siguiente esquema, respondiendo únicamente con la clave entre `[]`
 -  [**con**] numérica-continua
 
 ```{r mscale}
-make_question(
+.make_question(
   type = 'spl',
   key = 'mscale',
   content = list(
