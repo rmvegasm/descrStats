@@ -1,5 +1,7 @@
 # Herramientas para una prueba a distancia en contexto covid-19
 
+require('extraDistr')
+
 #-------------------------------------------------------------------------------
 # Initialize
 #-------------------------------------------------------------------------------
@@ -131,6 +133,93 @@ ans_question <- function (key, value) {
   return(invisible(NULL))
 }
 
+#-------------------------------------------------------------------------------
+# dataset generator
+#-------------------------------------------------------------------------------
+
+# generate a well balanced dataset including all variable types, different
+# measurement scales and some correlation structure. All parameters will be
+# stored within a (hidden) environment in order for the generating function to
+# be reusable.
+
+.sim_params <- new.env()
+
+.sim_dset <- function () {
+  # overall size
+  n = sample(900:1000, size = 1L)
+  
+  # numeric variables
+  mean_x = runif(1, 65, 80)
+  mean_y = runif(1, 160, 178)
+  sd_x = runif(1, 2, 5)
+  sd_y = runif(1, 2, 6)
+  
+  # correlation rxy
+  rxy = runif(1, .6, .95)
+  
+  # factor effects over mean and sd
+  ef_Amx = runif(1, -5, 5)
+  ef_Asdx = runif(1, .1, .5)
+  ef_Amy = runif(1, -5, 5)
+  ef_Asdy = runif(1, .1, .3)
+  ef_Arxy = runif(1, .01, .04)
+
+  ef_Bmx = runif(1, -5, 5)
+  ef_Bsdx = runif(1, .1, .3)
+  ef_Bmy = runif(1, -5, 5)
+  ef_Bsdy = runif(1, .3, .5)
+  ef_Brxy = runif(1, .01, .04) * -1
+
+  ef_Cmx = runif(1, -5, 5)
+  ef_Csdx = runif(1, .1, .5)
+  ef_Cmy = runif(1, -5, 5)
+  ef_Csdy = runif(1, .1, .5)
+  ef_Crxy = runif(1, .01, .04) * sample(c(1, -1), size = 1L)
+
+  # store params for inspection
+  for (param in ls()) assign(param, get(param), envir = .sim_params)
+
+  # simulate from bivariate normal (near half the dset size for each factor)
+  n_sim = n %/% 2
+  dset = rbind(
+    # grp A
+    rbvnorm(n_sim,
+            mean1 = mean_x + ef_Amx,
+            sd1 = sd_x + ef_Asdx,
+            mean2 = mean_y + ef_Amy,
+            sd2 = sd_y + ef_Asdy,
+            cor = rxy + ef_Arxy),
+    # grp B
+    rbvnorm(n_sim,
+            mean1 = mean_x + ef_Bmx,
+            sd1 = sd_x + ef_Bsdx,
+            mean2 = mean_y + ef_Bmy,
+            sd2 = sd_y + ef_Bsdy,
+            cor = rxy + ef_Brxy),
+    # grp C
+    rbvnorm(n_sim,
+            mean1 = mean_x + ef_Cmx,
+            sd1 = sd_x + ef_Csdx,
+            mean2 = mean_y + ef_Cmy,
+            sd2 = sd_y + ef_Csdy,
+            cor = rxy + ef_Crxy)
+    )
+  dset = as.data.frame(dset)
+  names(dset) = c('x', 'y')
+  dset[['grp']] = rep(c('A', 'B', 'C'), each = n_sim)
+  dset = dset[sample(1:dim(dset)[1L], size = n), ]
+  return(dset)
+}
+
+.make_dset <- function () {
+  if (exists('dset', envir = .GlobalEnv, inherits = FALSE)) {
+    cat('el set de datos "dset" ya fue creado, no puedo crearlo otra vez...\n\n')
+    return(invisible(NULL))
+  }
+  assign('dset', .sim_dset(), envir = .GlobalEnv)
+  cat('"dset" creado en el ambiente global\n\n')
+  return(invisible(NULL))
+}
 #-------------------------------------------------------------------------------
 # Submission
 #-------------------------------------------------------------------------------
