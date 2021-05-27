@@ -89,6 +89,10 @@ ans_question <- function (key, value) {
   return(invisible(NULL))
 }
 
+.get_points <- function (key) {
+  get('.questions', envir = .GlobalEnv)[[key]][['points']]
+}
+
 #-------------------------------------------------------------------------------
 # Question generator
 #-------------------------------------------------------------------------------
@@ -98,8 +102,8 @@ ans_question <- function (key, value) {
 # be part of the question type definition and contained within these
 # functions...
 
-.make_question <- function (type = c('spl'), key, content, ...) {
-  if (is.null(type) || !type %in% c('spl')) {
+.make_question <- function (type = c('spl', 'sglval'), key, points, ...) {
+  if (is.null(type) || !type %in% c('spl', 'sglval')) {
     stop('unknown question "type"')
   }
   questions <- get('.questions', envir = .GlobalEnv)
@@ -107,12 +111,12 @@ ans_question <- function (key, value) {
     stop('"key" must be unique and the one you provided is already taken...')
   }
   fun <- paste0('.make_question_', type)
-  args <- list(key = key, content = content, ...)
+  args <- list(key = key, points = points, ...)
   do.call(fun, args = args, envir = .GlobalEnv)
   return(invisible(NULL))
 }
 
-.make_question_spl <- function (key, content, resp_set, n = 5L) {
+.make_question_spl <- function (key, points, content, resp_set, n = 5L) {
   questions <- get('.questions', envir = .GlobalEnv)
   questions[[key]] <- list(
     do = function () {
@@ -141,12 +145,26 @@ ans_question <- function (key, value) {
     correct = function (value) {
       value
     },
-    points = NULL,
+    points = points,
     qs = content
   )
   assign('.questions', questions, envir = .GlobalEnv)
   return(invisible(NULL))
 }
+
+.make_question_sglval <- function (key, solution, points) {
+  questions <- get('.questions', envir = .GlobalEnv)
+  questions[[key]] <- list(
+    points = points,
+    solution = solution,
+    correct = function (value) {
+      isTRUE(all.equal(value, solution()))
+    }
+  )
+  assign('.questions', questions, envir = .GlobalEnv)
+  return(invisible(NULL))
+}
+
 
 #-------------------------------------------------------------------------------
 # dataset generator
@@ -235,12 +253,25 @@ ans_question <- function (key, value) {
   if (!quiet) cat('"dset" creado en el ambiente global\n\n')
   return(invisible(NULL))
 }
+
+make_dset <- function () .make_dset()
 #-------------------------------------------------------------------------------
 # Submission
 #-------------------------------------------------------------------------------
 
 submit <- function () {
   # make a filename
-  # serialize reg object
+  name = get('.reg', envir = .GLobalEnv)
+  filename = gsub(' ', '_', tolower(name))
+  
+  # serialize .reg object
+  save('.reg', 'dset', file = filename)
+
   # print a good bye message
+  cat('listo!\n',
+      'se ha creado un archivo con tu nombre en el directorio de trabajo, por favor sigue las instrucciones detalladas en el texto para estregarlo\n',
+      'buen día!\n')
+
+  # remove prueba1
+  file.remove('prueba1', 'main.html')
 }

@@ -27,6 +27,8 @@ pide:
 inicia()
 ```
 
+### vartype 
+
 ```{r vartype}
 .make_question(
   type = 'spl',
@@ -61,12 +63,11 @@ inicia()
       'con')
   ),
   resp_set = c('nom', 'ord', 'dis', 'con'),
-  n = 5
+  n = 5,
+  points = 5
 )
-
 ```
-
-### vartype 
+`r .get_points('vartype')` puntos
 
 Para responder esta pregunta es necesario invocar la función `run_question()`:
 
@@ -83,6 +84,8 @@ siguiendo el siguiente esquema, respondiendo únicamente con la clave entre `[]`
 -  [**ord**] categórica-ordinal
 -  [**dis**] numérica-discreta
 -  [**con**] numérica-continua
+
+### mscale
 
 ```{r mscale}
 .make_question(
@@ -118,11 +121,11 @@ siguiendo el siguiente esquema, respondiendo únicamente con la clave entre `[]`
       'rat')
   ),
   resp_set = c('nom', 'ord', 'int', 'rat'),
-  n = 5
+  n = 5,
+  points = 5
 )
-
 ```
-### mscale
+`r .get_points('vartype')` puntos
 
 Esta pregunta funciona del mismo modo que la anterior, para comenzar es
 necesario invocar la función `run_question()`:
@@ -140,7 +143,99 @@ de medición a la que pertenece** siguiendo el siguiente esquema:
 -  [**int**] escala de intervalo
 -  [**rat**] escala de razón ('ratio')
 
+## Set de datos
 
+Las preguntas siguientes utilizan un set de datos. Para generarlo y poder seguir
+adelante invoque la función `make_dset()`:
+
+```r
+make_dset()
+```
+Esta función creará un objeto nuevo en su espacio de trabajo llamado `dset`.
+Este objeto es el resultado de una simulación, y por ende es único para su
+sesión. Consiste en una colección de tres variables, dos **numéricas** de tipo
+**continuo** y en una escala de medición **racional** (`x` e `y`). La tercera es una
+variable **categórica** de tipo **nominal** (`grp`). Puede considerar estas
+variables como *peso*, *altura* y *dieta*, o como cualquier otra cosa que le
+parezca motivante (e.g. *eje mayor*, *eje menor* y *litología* de una muestra de
+cantos en una playa).
+
+Puede utilizar todas las funciones vistas en clases para explorar este set de
+datos, pero **no es posible volver a generarlo**, este es su set de datos para
+esta prueba. Puede modificar el objeto antes de empezar, por ejemplo transformar
+la variable `grp` a un factor puede hacer ciertas operaciones más fáciles,
+aunque esto no es necesario para responder. De suma importancia, **por ningún
+motivo modifique este objeto entre una pregunta y otra**. El efecto podría ser
+catastrófico.
+
+### meanmax
+
+```{r meanmax}
+.make_question(
+  type = 'sglval',
+  key = 'meanmax',
+  solution = function () {
+    names(
+      which.max(
+        with(dset, tapply(x, grp, mean))
+      )
+    )
+  },
+  points = 2L
+)
+```
+`r .get_points('meanmax')` puntos.
+
+¿Cuál de los tres grupos en `grp` tiene la *media* más alta para la variable
+`x`? (`'A'`, `'B'`, `'C'`)
+
+Para responder esta pregunta utilice la función `ans_question()` de la siguiente
+forma:
+
+```r
+ans_question('meanmax', value)
+```
+
+`value` debiera ser el valor que corresponde, ya sea entregándolo como un
+`character` o mediante una expresión que devuelva el caracter apropiado. Por
+ejemplo:
+
+```r
+ans_meanmax <- {...} # expresiones que resuleven la pregunta
+ans_question('meanmax', ans_meanmax)
+```
+
+### dispmax
+
+```{r dispmax}
+.make_question(
+  type = 'sglval',
+  key = 'dispmax',
+  solution = function () {
+    # solution
+    vr = names(
+      which.max(
+        sapply(dset[-3], var)
+      )
+    )
+    iq = names(
+      which.max(
+        sapply(dset[-3], IQR)
+      )
+    )
+    ifelse(identical(vr, iq), vr, NULL)    
+  },
+  points = 3L
+)
+```
+`r .get_points('dispmax')` puntos.
+
+¿Cuál de las variables numéricas posee mayor dispersión? Responda con el
+**nombre de la variable** en forma de `character` (e.g. `'x'`), usando la
+función `ans_question()`.
+
+Si considera que el grado de dispersión de ambas variables es indiferenciable, o
+distintas medidas son inconsistentes entre si, reponda con el valor `NULL`.
 
 ## Finalización
 
