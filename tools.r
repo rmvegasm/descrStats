@@ -1,6 +1,20 @@
 # Herramientas para una prueba a distancia en contexto covid-19
 
+
+#-------------------------------------------------------------------------------
+# Dependencies
+#-------------------------------------------------------------------------------
+
 require('extraDistr')
+
+# need to install this package in the students machines...
+.install_dep <- function () {
+  if (!require('extraDistr')) {
+    cat('Antes de empezar necesitamos instalar un paquete adicional...\n')
+    install.packages('extraDistr')
+  }
+  library('extraDistr')
+}
 
 #-------------------------------------------------------------------------------
 # Initialize
@@ -17,6 +31,7 @@ require('extraDistr')
 )
 
 inicia <- function () {
+  .install_dep()
   reg <- get('.reg', envir = .GlobalEnv)
   reg['name'] <- readline(prompt = 'Escriba por favor su nombre y apellido: ')
   reg['init_date'] <- date()
@@ -211,13 +226,13 @@ ans_question <- function (key, value) {
   return(dset)
 }
 
-.make_dset <- function () {
-  if (exists('dset', envir = .GlobalEnv, inherits = FALSE)) {
+.make_dset <- function (overwrite = FALSE, quiet = FALSE) {
+  if (exists('dset', envir = .GlobalEnv, inherits = FALSE) && !overwrite) {
     cat('el set de datos "dset" ya fue creado, no puedo crearlo otra vez...\n\n')
     return(invisible(NULL))
   }
   assign('dset', .sim_dset(), envir = .GlobalEnv)
-  cat('"dset" creado en el ambiente global\n\n')
+  if (!quiet) cat('"dset" creado en el ambiente global\n\n')
   return(invisible(NULL))
 }
 #-------------------------------------------------------------------------------
