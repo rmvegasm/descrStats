@@ -196,7 +196,7 @@ forma:
 ans_question('meanmax', value)
 ```
 
-`value` debiera ser el valor que corresponde, ya sea entregándolo como un
+`value` debe ser el valor que corresponde, ya sea entregándolo como un
 `character` o mediante una expresión que devuelva el caracter apropiado. Por
 ejemplo:
 
