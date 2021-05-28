@@ -261,7 +261,7 @@ make_dset <- function () .make_dset()
 
 submit <- function () {
   # make a filename
-  name = get('.reg', envir = .GLobalEnv)
+  name = get('.reg', envir = .GlobalEnv)[['name']]
   filename = gsub(' ', '_', tolower(name))
   
   # serialize .reg object
@@ -274,4 +274,5 @@ submit <- function () {
   
   # remove prueba1
   file.remove('prueba1', 'main.html')
+  return(invisible(NULL))
 }
