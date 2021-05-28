@@ -271,7 +271,7 @@ submit <- function () {
   cat('listo!\n',
       'se ha creado un archivo con tu nombre en el directorio de trabajo, por favor sigue las instrucciones detalladas en el texto para estregarlo\n',
       'buen día!\n')
-
+  
   # remove prueba1
   file.remove('prueba1', 'main.html')
 }
