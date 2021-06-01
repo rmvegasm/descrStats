@@ -395,6 +395,7 @@ pre code {
 <pre class="r"><code>load(&#39;prueba1&#39;)</code></pre>
 <p>Comienze la prueba corriendo la función <code>inicia()</code> y respondiéndole lo que le pide:</p>
 <pre class="r"><code>inicia()</code></pre>
+<hr />
 <div id="vartype" class="section level3">
 <h3>vartype</h3>
 <p>5 puntos</p>
@@ -407,6 +408,7 @@ pre code {
 <li>[<strong>dis</strong>] numérica-discreta</li>
 <li>[<strong>con</strong>] numérica-continua</li>
 </ul>
+<hr />
 </div>
 <div id="mscale" class="section level3">
 <h3>mscale</h3>
@@ -420,6 +422,7 @@ pre code {
 <li>[<strong>int</strong>] escala de intervalo</li>
 <li>[<strong>rat</strong>] escala de razón (‘ratio’)</li>
 </ul>
+<hr />
 </div>
 <div id="set-de-datos" class="section level2">
 <h2>Set de datos</h2>
@@ -427,21 +430,44 @@ pre code {
 <pre class="r"><code>make_dset()</code></pre>
 <p>Esta función creará un objeto nuevo en su espacio de trabajo llamado <code>dset</code>. Este objeto es el resultado de una simulación, y por ende es único para su sesión. Consiste en una colección de tres variables, dos <strong>numéricas</strong> de tipo <strong>continuo</strong> y en una escala de medición <strong>racional</strong> (<code>x</code> e <code>y</code>). La tercera es una variable <strong>categórica</strong> de tipo <strong>nominal</strong> (<code>grp</code>). Puede considerar estas variables como <em>peso</em>, <em>altura</em> y <em>dieta</em>, o como cualquier otra cosa que le parezca motivante (e.g. <em>eje mayor</em>, <em>eje menor</em> y <em>litología</em> de una muestra de cantos en una playa).</p>
 <p>Puede utilizar todas las funciones vistas en clases para explorar este set de datos, pero <strong>no es posible volver a generarlo</strong>, este es su set de datos para esta prueba. Puede modificar el objeto antes de empezar, por ejemplo transformar la variable <code>grp</code> a un factor puede hacer ciertas operaciones más fáciles, aunque esto no es necesario para responder. De suma importancia, <strong>por ningún motivo modifique este objeto entre una pregunta y otra</strong>. El efecto podría ser catastrófico.</p>
+<hr />
 <div id="meanmax" class="section level3">
 <h3>meanmax</h3>
 <p>2 puntos.</p>
 <p>¿Cuál de los tres grupos en <code>grp</code> tiene la <em>media</em> más alta para la variable <code>x</code>? (<code>&#39;A&#39;</code>, <code>&#39;B&#39;</code>, <code>&#39;C&#39;</code>)</p>
 <p>Para responder esta pregunta utilice la función <code>ans_question()</code> de la siguiente forma:</p>
 <pre class="r"><code>ans_question(&#39;meanmax&#39;, value)</code></pre>
-<p><code>value</code> debiera ser el valor que corresponde, ya sea entregándolo como un <code>character</code> o mediante una expresión que devuelva el caracter apropiado. Por ejemplo:</p>
+<p><code>value</code> debe ser el valor que corresponde, ya sea entregándolo como un <code>character</code> o mediante una expresión que devuelva el caracter apropiado. Por ejemplo:</p>
 <pre class="r"><code>ans_meanmax &lt;- {...} # expresiones que resuleven la pregunta
 ans_question(&#39;meanmax&#39;, ans_meanmax)</code></pre>
+<hr />
+</div>
+<div id="dispmin" class="section level3">
+<h3>dispmin</h3>
+<p>3 puntos.</p>
+<p>¿Cuál de los tres grupos presenta menor dispersión para la variable <code>x</code>? Responda con el <strong>nombre del grupo</strong> en forma de <code>character</code> (e.g. <code>&#39;A&#39;</code>), usando la función <code>ans_question()</code>.</p>
+<p>Si considera que el grado de dispersión de los grupos es indiferenciable, o distintas medidas son inconsistentes entre si, reponda con el valor <code>NULL</code>.</p>
+<hr />
 </div>
 <div id="dispmax" class="section level3">
 <h3>dispmax</h3>
 <p>3 puntos.</p>
-<p>¿Cuál de las variables numéricas posee mayor dispersión? Responda con el <strong>nombre de la variable</strong> en forma de <code>character</code> (e.g. <code>&#39;x&#39;</code>), usando la función <code>ans_question()</code>.</p>
-<p>Si considera que el grado de dispersión de ambas variables es indiferenciable, o distintas medidas son inconsistentes entre si, reponda con el valor <code>NULL</code>.</p>
+<p>¿Cuál de las dos variables numéricas tiene mayor dispersión? (considere los efectos de la escala de medición antes de responder…) Use la función <code>ans_question()</code> para registrar su respuesta, tenga presente que la función espera el <strong>nombre de la variable</strong> en forma de <code>character</code>.</p>
+<hr />
+</div>
+<div id="relmax" class="section level3">
+<h3>relmax</h3>
+<p>3 puntos.</p>
+<p>¿Cuál de los tres grupos en <code>grp</code> tiene una relación más <strong>estrecha</strong> entre las variables <code>x</code> e <code>y</code>? Al igual que las preguntas precedentes, esta espera el <strong>nombre</strong> del grupo como respuesta. Utiliza la función <code>ans_question()</code> para registrar tu respuesta.</p>
+<hr />
+</div>
+<div id="vof" class="section level3">
+<h3>vof</h3>
+<p>5 puntos.</p>
+<p>Esta pregunta requiere el uso de la función <code>run_question()</code>:</p>
+<pre class="r"><code>run_question(&#39;vof&#39;)</code></pre>
+<p>La consola imprimirá una serie de afirmaciones (de a una a la vez) y esperará una respuesta de su parte. Responda con <code>v</code> o <code>f</code> si considera que la afirmación es <em>verdadera</em> o <em>falsa</em>, respectivamente.</p>
+<hr />
 </div>
 </div>
 <div id="finalización" class="section level2">

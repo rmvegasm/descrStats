@@ -93,6 +93,12 @@ ans_question <- function (key, value) {
   get('.questions', envir = .GlobalEnv)[[key]][['points']]
 }
 
+.get_max_points <- function (sum = TRUE) {
+  qs <- get('.questions', envir = .GlobalEnv)
+  tp <- sapply(qs, function (x) x[['points']])
+  return(ifelse(sum, sum(tp), tp))
+}
+
 #-------------------------------------------------------------------------------
 # Question generator
 #-------------------------------------------------------------------------------
@@ -269,7 +275,8 @@ submit <- function () {
 
   # print a good bye message
   cat('listo!\n',
-      'se ha creado un archivo con tu nombre en el directorio de trabajo, por favor sigue las instrucciones detalladas en el texto para estregarlo\n',
+      'se ha creado un archivo con tu nombre en el directorio de trabajo,\n
+       por favor sigue las instrucciones detalladas en el texto para estregarlo\n',
       'buen día!\n')
   
   # remove prueba1

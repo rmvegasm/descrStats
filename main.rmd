@@ -26,6 +26,7 @@ pide:
 ```r
 inicia()
 ```
+---
 
 ### vartype 
 
@@ -85,6 +86,8 @@ siguiendo el siguiente esquema, respondiendo únicamente con la clave entre `[]`
 -  [**dis**] numérica-discreta
 -  [**con**] numérica-continua
 
+---
+
 ### mscale
 
 ```{r mscale}
@@ -143,6 +146,8 @@ de medición a la que pertenece** siguiendo el siguiente esquema:
 -  [**int**] escala de intervalo
 -  [**rat**] escala de razón ('ratio')
 
+---
+
 ## Set de datos
 
 Las preguntas siguientes utilizan un set de datos. Para generarlo y poder seguir
@@ -167,6 +172,8 @@ la variable `grp` a un factor puede hacer ciertas operaciones más fáciles,
 aunque esto no es necesario para responder. De suma importancia, **por ningún
 motivo modifique este objeto entre una pregunta y otra**. El efecto podría ser
 catastrófico.
+
+---
 
 ### meanmax
 
@@ -205,6 +212,41 @@ ans_meanmax <- {...} # expresiones que resuleven la pregunta
 ans_question('meanmax', ans_meanmax)
 ```
 
+---
+
+### dispmin
+
+```{r dispmin}
+.make_question(
+  type = 'sglval',
+  key = 'dispmin',
+  solution = function () {
+    vr = names(
+      which.min(
+        with(dset, tapply(x, grp, var))
+      )
+    )
+    iq = names(
+      which.min(
+        with(dset, tapply(x, grp, IQR))
+      )
+    )
+    ifelse(identical(vr, iq), vr, NULL)
+ },
+  points = 3L
+)
+```
+`r .get_points('dispmin')` puntos.
+
+¿Cuál de los tres grupos presenta menor dispersión para la variable `x`? Responda con el
+**nombre del grupo** en forma de `character` (e.g. `'A'`), usando la
+función `ans_question()`.
+
+Si considera que el grado de dispersión de los grupos es indiferenciable, o
+distintas medidas son inconsistentes entre si, reponda con el valor `NULL`.
+
+---
+
 ### dispmax
 
 ```{r dispmax}
@@ -212,30 +254,90 @@ ans_question('meanmax', ans_meanmax)
   type = 'sglval',
   key = 'dispmax',
   solution = function () {
-    # solution
-    vr = names(
+    names(
       which.max(
-        sapply(dset[-3], var)
+        sapply(dset[-3L], function (x) sd(x) / mean(x))
       )
     )
-    iq = names(
-      which.max(
-        sapply(dset[-3], IQR)
-      )
-    )
-    ifelse(identical(vr, iq), vr, NULL)    
   },
   points = 3L
 )
 ```
 `r .get_points('dispmax')` puntos.
 
-¿Cuál de las variables numéricas posee mayor dispersión? Responda con el
-**nombre de la variable** en forma de `character` (e.g. `'x'`), usando la
-función `ans_question()`.
+¿Cuál de las dos variables numéricas tiene mayor dispersión? (considere los
+efectos de la escala de medición antes de responder...) Use la función
+`ans_question()` para registrar su respuesta, tenga presente que la función
+espera el **nombre de la variable** en forma de `character`.
 
-Si considera que el grado de dispersión de ambas variables es indiferenciable, o
-distintas medidas son inconsistentes entre si, reponda con el valor `NULL`.
+---
+
+### relmax
+
+```{r relmax}
+.make_question(
+  type = 'sglval',
+  key = 'relmax',
+  solution = function () {
+    names(
+      which.max(
+        sapply(
+          split(dset, dset[['grp']]), function (x) cor(x[['x']], x[['y']])
+        )
+      )
+    )
+  },
+  points = 3L
+)
+```
+`r .get_points('relmax')` puntos.
+
+¿Cuál de los tres grupos en `grp` tiene una relación más **estrecha** entre las
+variables `x` e `y`? Al igual que las preguntas precedentes, esta espera el
+**nombre** del grupo como respuesta. Utiliza la función `ans_question()` para
+registrar tu respuesta.
+
+---
+
+### vof
+
+```{r vof}
+.make_question(
+  type = 'spl',
+  key = 'vof',
+  content = list(
+    c('La varianza es dependiente de la escala de medición', 'v'),
+    c('La covarianza entre dos variables es dependiente de la escala de medición', 'v'),
+    c('La correlación entre dos variables es dependiente de la escala de medición', 'f'),
+    c('La mediana es equivalente al percentil 50', 'v'),
+    c('La covarianza de una variable con si misma es equivalente a la correlación con si misma', 'f'),
+    c('La covarianza de una variable con si misma es equivalente a la varianza de la variable', 'v'),
+    c('La varianza de una variable es equivalente a la raíz cuadrada de la desviación estándar', 'f'),
+    c('Son medidas de dispersión la "varianza", la "moda" y el "rango intercuartil"', 'f'),
+    c('Son medidas de tendencia central la "moda", la "media" y la "mediana"', 'v'),
+    c('La media es sensible a los valores extremos', 'v'),
+    c('La mediana es más sensible a valores extremos que la media', 'f'),
+    c('El coeficiente de variación es una medida de dispersión independiente de la escala de medición', 'v'),
+    c('La correlación entre dos variables mide la "fureza" de la relación entre ambas', 'v')
+  ),
+  resp_set = c('v', 'f'),
+  points = 5L,
+  n = 5L
+)
+```
+`r .get_points('vof')` puntos.
+
+Esta pregunta requiere el uso de la función `run_question()`:
+
+```r
+run_question('vof')
+```
+
+La consola imprimirá una serie de afirmaciones (de a una a la vez) y esperará
+una respuesta de su parte. Responda con `v` o `f` si considera que la
+afirmación es *verdadera* o *falsa*, respectivamente.
+
+---
 
 ## Finalización
 
