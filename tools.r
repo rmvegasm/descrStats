@@ -5,6 +5,7 @@
 # Dependencies
 #-------------------------------------------------------------------------------
 
+require('rdrop2')
 require('extraDistr')
 
 # need to install this package in the students machines...
@@ -29,6 +30,16 @@ require('extraDistr')
     done = character(),
     end_date = character()
 )
+
+.resp2df <- function () {
+  reg = get('.reg', envir = .GlobalEnv)
+  resp = reg[['resp']]
+  time = sapply(resp, function (x) x[['time']])
+  points = sapply(resp, function (x) x[['points']])
+  correct = sapply(resp, function (x) x[['correct']])
+  value = sapply(resp, function (x) x[['value']])
+  data.frame(time, points, correct, value)
+}
 
 inicia <- function () {
   .install_dep()
@@ -265,18 +276,30 @@ make_dset <- function () .make_dset()
 # Submission
 #-------------------------------------------------------------------------------
 
+# read dropbox token for rdrop2:
+.token = readRDS('token.rds')
+
 submit <- function () {
+  reg = get('.reg', envir = .GlobalEnv)
+
   # make a filename
-  name = get('.reg', envir = .GlobalEnv)[['name']]
+  name = reg[['name']]
   filename = gsub(' ', '_', tolower(name))
   
+  # register end_date:
+  reg[['end_date']] = date()
+  assign('.reg', reg, envir = .GlobalEnv)
+
   # serialize .reg object
   save('.reg', 'dset', file = filename)
+
+  # upload to dropbox
+  rdrop2::drop_upload(filename, path = 'tmp', dtoken = .token)
 
   # print a good bye message
   cat('listo!\n',
       'se ha creado un archivo con tu nombre en el directorio de trabajo,\n
-       por favor sigue las instrucciones detalladas en el texto para estregarlo\n',
+       consérvalo como respaldo. Una copia ha sido enviada al profesor\n',
       'buen día!\n')
   
   # remove prueba1
