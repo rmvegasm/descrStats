@@ -15,6 +15,11 @@ require('extraDistr')
     install.packages('extraDistr')
   }
   library('extraDistr')
+  if (!require('rdrop2')) {
+    cat('Antes de empezar necesitamos instalar un paquete adicional...\n')
+    install.packages('rdrop2')
+  }
+  library('rdrop2')
 }
 
 #-------------------------------------------------------------------------------
@@ -276,11 +281,25 @@ make_dset <- function () .make_dset()
 # Submission
 #-------------------------------------------------------------------------------
 
+.grade <- function () {
+  tpnt = sum(sapply(.questions, function (x) x[['points']]))
+  smry = .resp2df()
+  pnts = sum(smry[['points']][smry[['correct']]])
+  nota = 1 + (pnts / tpnt) * 6
+  return(round(nota, digits = 1))
+}
+
 # read dropbox token for rdrop2:
 .token = readRDS('token.rds')
 
 submit <- function () {
   reg = get('.reg', envir = .GlobalEnv)
+
+  # don't send twice
+  if (!identical(reg[['end_date']], character())) {
+    cat('sus respuestas ya fueron enviadas, no pueden enviarse otra vez...\n')
+    return(invisible(NULL))
+  }
 
   # make a filename
   name = reg[['name']]
@@ -295,13 +314,19 @@ submit <- function () {
 
   # upload to dropbox
   rdrop2::drop_upload(filename, path = 'tmp', dtoken = .token)
+  rm(.token, envir = .GlobalEnv)
 
   # print a good bye message
-  cat('listo!\n',
-      'se ha creado un archivo con tu nombre en el directorio de trabajo,\n
-       consérvalo como respaldo. Una copia ha sido enviada al profesor\n',
-      'buen día!\n')
+  cat('listo!',
+      'Se ha creado un archivo con tu nombre en el directorio de trabajo.',
+      'Una copia ha sido enviada al profesor',
+      'Buen día!\n\n', sep = '\n')
   
+  # report grade
+  cat('Tus respuestas:\n')
+  print(.resp2df())
+  cat('Tu nota final:', .grade(), '\n')
+
   # remove prueba1
   file.remove('prueba1', 'main.html')
   return(invisible(NULL))

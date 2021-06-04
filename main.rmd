@@ -231,7 +231,7 @@ ans_question('meanmax', ans_meanmax)
         with(dset, tapply(x, grp, IQR))
       )
     )
-    ifelse(identical(vr, iq), vr, NULL)
+    ifelse(identical(vr, iq), vr, NA)
  },
   points = 3L
 )
@@ -243,7 +243,7 @@ ans_question('meanmax', ans_meanmax)
 función `ans_question()`.
 
 Si considera que el grado de dispersión de los grupos es indiferenciable, o
-distintas medidas son inconsistentes entre si, reponda con el valor `NULL`.
+distintas medidas son inconsistentes entre si, reponda con el valor `NA`.
 
 ---
 
@@ -347,7 +347,9 @@ Para terminar su prueba, invoque la función `submit()`:
 submit()
 ```
 
-mande la custión...
+Se habrá creado un archivo con su nombre (sin extensión) en el directorio de
+trabajo. Este archivo contiene su `dset` y sus respuestas, conviene guardarlo
+como respaldo. Una copia ha sido enviada al profesor.
 
 # FIN
 
